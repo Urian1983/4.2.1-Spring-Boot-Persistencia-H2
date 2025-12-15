@@ -10,5 +10,6 @@ public interface FruitService {
     FruitResponseDTO addFruit(FruitRequestDTO requestDTO);
     List<FruitResponseDTO> getAllFruits();
     FruitResponseDTO getFruitById(Long id) throws FruitNotFoundException;
+    void deleteFruit(Long id);
 
 }

@@ -38,8 +38,8 @@ public class FruitServiceImplTest {
     }
 
     @Test
-    void add_savesFruit(){
-        FruitRequestDTO request = new FruitRequestDTO("Apple",1);
+    void add_savesFruit() {
+        FruitRequestDTO request = new FruitRequestDTO("Apple", 1);
 
         when(fruitRepository.save(any(Fruit.class))).thenReturn(mockFruit);
 
@@ -53,9 +53,9 @@ public class FruitServiceImplTest {
     }
 
     @Test
-    void getAllFruits_returnsAllFruit(){
-        Fruit fruit1 = new Fruit(1L,"Apple", 1);
-        Fruit fruit2 = new Fruit (2L,"Banana",2);
+    void getAllFruits_returnsAllFruit() {
+        Fruit fruit1 = new Fruit(1L, "Apple", 1);
+        Fruit fruit2 = new Fruit(2L, "Banana", 2);
         List<Fruit> mockFruits = Arrays.asList(fruit1, fruit2);
 
         when(fruitRepository.findAll()).thenReturn(mockFruits);
@@ -69,7 +69,7 @@ public class FruitServiceImplTest {
     }
 
     @Test
-    void getAllFruits_returnsEmptyList(){
+    void getAllFruits_returnsEmptyList() {
         when(fruitRepository.findAll()).thenReturn(Arrays.asList());
 
         List<FruitResponseDTO> result = fruitServiceImpl.getAllFruits();
@@ -80,7 +80,7 @@ public class FruitServiceImplTest {
 
 
     @Test
-    void getFruitById_returnsFruit(){
+    void getFruitById_returnsFruit() {
         when(fruitRepository.findById(1L)).thenReturn(Optional.of(mockFruit));
 
         FruitResponseDTO result = fruitServiceImpl.getFruitById(1L);
@@ -93,7 +93,7 @@ public class FruitServiceImplTest {
     }
 
     @Test
-    void getFruitById_throwsExceptionWhenNotFound(){
+    void getFruitById_throwsExceptionWhenNotFound() {
         when(fruitRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> fruitServiceImpl.getFruitById(999L))
@@ -103,4 +103,25 @@ public class FruitServiceImplTest {
         verify(fruitRepository).findById(999L);
     }
 
+    @Test
+    void deleteFruit_deletesSuccessfully() {
+        when(fruitRepository.findById(1L)).thenReturn(Optional.of(mockFruit));
+
+        fruitServiceImpl.deleteFruit(1L);
+
+        verify(fruitRepository).findById(1L);
+        verify(fruitRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteFruit_throwsExceptionWhenNotFound() {
+        when(fruitRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> fruitServiceImpl.deleteFruit(999L))
+                .isInstanceOf(FruitNotFoundException.class)
+                .hasMessage("Fruit with id 999 not found");
+
+        verify(fruitRepository).findById(999L);
+
+    }
 }

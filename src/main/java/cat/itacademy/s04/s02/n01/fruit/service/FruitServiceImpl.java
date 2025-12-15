@@ -53,4 +53,12 @@ public class FruitServiceImpl implements FruitService{
                 fruit.getWeightInKilos()
         );
     }
+
+    public void deleteFruit(Long id){
+        fruitRepository.findById(id)
+                .orElseThrow(() -> new FruitNotFoundException("Fruit with id " + id + " not found"));
+
+        fruitRepository.deleteById(id);
+    }
+
 }
